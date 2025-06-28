@@ -1,0 +1,178 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    background: url('imagenes/fondo.png') no-repeat center center fixed;
+    background-size: cover;
+}
+
+/* Contenedor principal */
+.game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 20px;
+    width: 100vw;
+    height: calc(100vh - 60px);
+    box-sizing: border-box;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    padding: 10px;
+}
+
+/* Aciertos y Desaciertos en la esquina superior */
+.scoreboard, .scoreboard1 {
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    display: flex;
+    gap: 15px;
+    color: white;
+}
+
+.scoreboard { left: 20px; }
+.scoreboard1 { right: 20px; }
+
+.scoreboard p {
+    margin: 0;
+}
+
+/* Filas de elementos */
+.row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* Estilos de los cuadros de texto */
+.item {
+    width: 220px;
+    height: 80px;
+    padding: 15px;
+    font-weight: bold;
+    text-align: center;
+    cursor: grab;
+    color: black;
+    border-radius: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos de los cuadros de imagen */
+.target {
+    width: 200px;
+    height: auto;
+    border: 2px dashed #ccc;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+/* Ajuste de imágenes dentro de los cuadros */
+.target img {
+    width: calc(100% - 2px);
+    height: auto;
+    max-height: 138px;
+}
+
+/* Texto debajo de las imágenes en negrita */
+.target-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 5px;
+}
+
+/* Estilos de los aciertos y errores */
+.correct { border-color: green !important; }
+.incorrect { border-color: red !important; }
+
+/* Ajuste para dispositivos pequeños */
+@media (max-width: 1024px) {
+    .game-container {
+        height: auto;
+        padding: 10px;
+    }
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+    .item, .target {
+        width: 90%;
+    }
+    .scoreboard, .scoreboard1 {
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .item {
+        width: 100%;
+        height: auto;
+        font-size: 14px;
+        padding: 10px;
+    }
+    .target {
+        width: 100%;
+    }
+    .target img {
+        max-height: 100px;
+    }
+}
+
+/* Estilos para el carrusel de texto */
+.carousel-container {
+    width: 100%;
+    overflow: hidden;
+    color: black;
+    padding: 15px 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    backdrop-filter: blur(5px);
+}
+
+.carousel-content {
+    display: flex;
+    white-space: nowrap;
+    animation: marquee 15s linear infinite;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(-100%);
+    }
+}

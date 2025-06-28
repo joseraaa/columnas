@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instrucciones del Juego</title>
+    <style>
+        @font-face {
+            font-family: 'Virust';
+            src: url('virust.ttf') format('truetype'); /* Asegúrate de tener este archivo en tu servidor */
+        }
+        body {
+            font-family: 'Virust', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background: url('imagenes/fondo.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .column {
+            width: 300px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: rgba(139, 69, 19, 0.8); /* Color marrón similar a los bordes de la imagen */
+            color: white;
+            border: 2px solid #8B4513; /* Borde marrón oscuro */
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: rgba(101, 45, 16, 0.9); /* Oscurecer un poco en hover */
+        }
+    </style>
+</head>
+<body>
+    <h1>Bienvenido al Juego</h1>
+    <div class="container">
+        <div class="column">
+            <h2>Instrucciones</h2>
+            <p>1. Presiona el botón <strong>"Jugar"</strong> para comenzar.</p>
+            <p>2. Lee atentamente cada enunciado.</p>
+            <p>3. Arrastra el texto y relaciónalo con la imagen que consideres correcta.</p>
+            <p>4. Si la relación es correcta, la casilla de la imagen cambiará de color.</p>
+            <p>5. Si la relación es incorrecta, la casilla se marcará en rojo.</p>
+            <p>6. Continúa hasta completar todas las relaciones correctamente.</p>
+        </div>        
+        <div class="column">
+            <h2>Objetivo</h2>
+            <p>El objetivo del juego es reforzar lo visto el día de hoy en tu visita al museo del 5 de mayo.</p>
+        </div>
+    </div>
+    <button onclick="location.href='game.html'">Jugar</button>
+</body>
+</html>
