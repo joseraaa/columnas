@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", function () {
     let matches = {};
     let aciertos = 0;
     let desaciertos = 0;
+    let draggedElement = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
 
     function seleccionarParesAleatorios() {
         selectedPairs = allItems.sort(() => 0.5 - Math.random()).slice(0, 7);
@@ -67,17 +70,125 @@ document.addEventListener("DOMContentLoaded", function () {
         agregarEventos();
     }
 
+    function procesarRelacion(draggedItem, target) {
+        if (matches[target.dataset.id] === target.dataset.id) {
+            return; // Evita cambiar una relación correcta
+        }
+
+        matches[target.dataset.id] = draggedItem.dataset.match;
+        draggedItem.style.visibility = "hidden";
+        target.classList.add("occupied");
+
+        if (draggedItem.dataset.match === target.dataset.id) {
+            target.style.border = "3px solid green";
+            aciertos++;
+        } else {
+            target.style.border = "3px solid red";
+            desaciertos++;
+
+            setTimeout(() => {
+                draggedItem.style.visibility = "visible";
+                target.style.border = "1px solid black";
+                target.classList.remove("occupied");
+                delete matches[target.dataset.id];
+            }, 1000);
+        }
+
+        document.getElementById("aciertos").textContent = aciertos;
+        document.getElementById("desaciertos").textContent = desaciertos;
+
+        setTimeout(() => {
+            if (verificarJuegoCompletado()) {
+                Swal.fire({
+                    title: "¡Felicidades!",
+                    text: "Has completado el juego correctamente.",
+                    icon: "success",
+                    timer: 5000,
+                    showConfirmButton: false
+                });
+
+                setTimeout(() => {
+                    window.location.href = "index.html"; 
+                }, 5000);
+            }
+        }, 500);
+    }
+
+    function getElementFromPoint(x, y) {
+        return document.elementFromPoint(x, y);
+    }
+
     function agregarEventos() {
         const items = document.querySelectorAll(".item");
         const targets = document.querySelectorAll(".target");
 
         items.forEach(item => {
+            // Eventos de mouse (funcionalidad existente)
             item.addEventListener("dragstart", (e) => {
                 e.dataTransfer.setData("text", e.target.id);
             });
+
+            // Eventos táctiles
+            item.addEventListener("touchstart", (e) => {
+                e.preventDefault(); // Previene scroll accidental
+                draggedElement = item;
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                
+                // Agregar feedback visual
+                item.style.opacity = "0.7";
+                item.style.transform = "scale(1.05)";
+            }, { passive: false });
+
+            item.addEventListener("touchmove", (e) => {
+                e.preventDefault(); // Previene scroll durante el arrastre
+                
+                if (!draggedElement) return;
+                
+                const touch = e.touches[0];
+                const elementBelow = getElementFromPoint(touch.clientX, touch.clientY);
+                
+                // Remover highlight previo
+                targets.forEach(target => {
+                    target.style.backgroundColor = "";
+                });
+                
+                // Highlight del target actual
+                if (elementBelow && elementBelow.closest('.target')) {
+                    const targetElement = elementBelow.closest('.target');
+                    targetElement.style.backgroundColor = "rgba(0, 123, 255, 0.1)";
+                }
+            }, { passive: false });
+
+            item.addEventListener("touchend", (e) => {
+                e.preventDefault();
+                
+                if (!draggedElement) return;
+                
+                const touch = e.changedTouches[0];
+                const elementBelow = getElementFromPoint(touch.clientX, touch.clientY);
+                
+                // Restaurar estilos del elemento arrastrado
+                item.style.opacity = "";
+                item.style.transform = "";
+                
+                // Remover highlight de todos los targets
+                targets.forEach(target => {
+                    target.style.backgroundColor = "";
+                });
+                
+                if (elementBelow && elementBelow.closest('.target')) {
+                    const targetElement = elementBelow.closest('.target');
+                    procesarRelacion(draggedElement, targetElement);
+                }
+                
+                draggedElement = null;
+            }, { passive: false });
         });
 
         targets.forEach(target => {
+            // Eventos de mouse (funcionalidad existente)
             target.addEventListener("dragover", (e) => {
                 e.preventDefault();
             });
@@ -86,48 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.preventDefault();
                 let itemId = e.dataTransfer.getData("text");
                 let draggedItem = document.getElementById(itemId);
-
-                if (matches[target.dataset.id] === target.dataset.id) {
-                    return; // Evita cambiar una relación correcta
-                }
-
-                matches[target.dataset.id] = draggedItem.dataset.match;
-                draggedItem.style.visibility = "hidden";
-                target.classList.add("occupied");
-
-                if (draggedItem.dataset.match === target.dataset.id) {
-                    target.style.border = "3px solid green";
-                    aciertos++;
-                } else {
-                    target.style.border = "3px solid red";
-                    desaciertos++;
-
-                    setTimeout(() => {
-                        draggedItem.style.visibility = "visible";
-                        target.style.border = "1px solid black";
-                        target.classList.remove("occupied");
-                        delete matches[target.dataset.id];
-                    }, 1000);
-                }
-
-                document.getElementById("aciertos").textContent = aciertos;
-                document.getElementById("desaciertos").textContent = desaciertos;
-
-                setTimeout(() => {
-                    if (verificarJuegoCompletado()) {
-                        Swal.fire({
-                            title: "¡Felicidades!",
-                            text: "Has completado el juego correctamente.",
-                            icon: "success",
-                            timer: 5000,
-                            showConfirmButton: false
-                        });
-
-                        setTimeout(() => {
-                            window.location.href = "index.html"; 
-                        }, 5000);
-                    }
-                }, 500);
+                procesarRelacion(draggedItem, target);
             });
         });
     }
@@ -140,6 +210,7 @@ document.addEventListener("DOMContentLoaded", function () {
         aciertos = 0;
         desaciertos = 0;
         matches = {};
+        draggedElement = null;
         document.getElementById("aciertos").textContent = aciertos;
         document.getElementById("desaciertos").textContent = desaciertos;
 
