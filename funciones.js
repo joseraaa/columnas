@@ -99,7 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         setTimeout(() => {
             if (verificarJuegoCompletado()) {
-                Swal.fire({
+                // Usar el sistema de diálogos offline
+                showDialog({
                     title: "¡Felicidades!",
                     text: "Has completado el juego correctamente.",
                     icon: "success",
